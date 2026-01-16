@@ -37,6 +37,7 @@ export const db = new Pool({
   max: 20,                    // Maximum connections in pool
   idleTimeoutMillis: 30000,  // Close idle connections after 30s
   connectionTimeoutMillis: 5000, // Fail if can't get connection in 5s
+  ssl: { rejectUnauthorized: false },
 });
 
 // Handle pool errors
