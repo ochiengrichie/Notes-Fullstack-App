@@ -42,7 +42,7 @@ export default function Notes({
       </div>
 
         {showSearch && (
-        <div className="notes-search">
+        <div className="notes-search notes-search-active">
           <input
             type="text"
             placeholder="Search notes..."
