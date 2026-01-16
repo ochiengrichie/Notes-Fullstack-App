@@ -1,4 +1,4 @@
-# Notes App 📝
+# Notes App
 
 A full-stack note-taking application with secure user authentication, real-time search, and production-level security practices.
 
@@ -110,7 +110,7 @@ Frontend runs on: `http://localhost:5173`
 - **Password Hashing** — bcrypt with 10 salt rounds
 - **Environment Validation** — Fails immediately if required config missing
 
-## 📖 Database Schema
+## Database Schema
 
 ### Users Table
 ```sql
