@@ -1,0 +1,32 @@
+/* Centers everything on the screen */
+.page-center {
+  height: 100vh;                
+  display: flex;
+  justify-content: center;      
+  align-items: center;         
+  background-color: #161718;    
+}
+
+/* The card */
+.login-component {
+  background-color: grey;
+  padding: 30px;
+  width: 200px;
+  border-radius: 10px;
+  box-shadow: 20 10px 25px rgba(81, 56, 223, 0.1);
+  text-align: center;
+}
+
+/* Inputs */
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Button */
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}

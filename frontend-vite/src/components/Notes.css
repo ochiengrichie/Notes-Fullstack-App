@@ -1,0 +1,92 @@
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* centers the flex children horizontally */
+  justify-content: center;   /* centers vertically */
+  min-height: calc(100vh - 70px); /* full height minus navbar */
+  padding: 20px;
+  text-align: left;       
+}
+
+.notes-input {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;   /* center input + button */
+  gap: 10px;
+}
+
+.notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: min(700px, 100%);  
+}
+
+.notes-list li {
+  display: flex;
+  justify-content: space-between;  /* keep title left, delete button right */
+  align-items: center;
+  margin: 5px 0;
+  padding: 5px 10px;
+}
+
+/* Left side (title area) */
+.note-main {
+  flex: 1;
+  min-width: 0;              /* IMPORTANT for ellipsis in flex layouts */
+  cursor: pointer;
+}
+
+.notes-title {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+
+.notes-title:hover {
+  color: blue;
+  font-size: 30px;
+}
+
+/* Right side: vertical button column */
+.note-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+/* Optional: make buttons consistent */
+.note-actions button {
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+.add-button {
+  position: fixed;
+  bottom: 40px;
+  right: 300px;
+
+  border-radius: 60%;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+
+  transition: transform 0.3s ease-out;
+
+  z-index: 1000;
+}
+
+.add-button:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.4);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.notes-search {
+  position: fixed;
+  top: 100px;
+  right:300px;
+}
