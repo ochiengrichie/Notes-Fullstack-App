@@ -1,8 +1,8 @@
-# Notes App 📝
+# Notes App
 
 A full-stack note-taking application with secure user authentication, real-time search, and production-level security practices.
 
-## 🚀 Features
+##  Features
 
 - **User Authentication** — Email/password registration with strength validation, JWT tokens, refresh tokens
 - **Google OAuth** — One-click login with Google
@@ -13,7 +13,7 @@ A full-stack note-taking application with secure user authentication, real-time 
 - **Input Validation** — Email format, password strength, note size limits (50K chars max)
 - **Security** — SQL injection prevention, secure cookies, bcrypt password hashing
 
-## 🛠 Tech Stack
+## Tech Stack
 
 **Frontend:**
 - React 18
@@ -32,13 +32,13 @@ A full-stack note-taking application with secure user authentication, real-time 
 - Google OAuth 2.0
 - httpOnly Secure Cookies
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - Node.js 16+
 - PostgreSQL 12+
 - npm or yarn
 
-## 🔧 Installation
+##  Installation
 
 ### Backend Setup
 
@@ -84,7 +84,7 @@ npm run dev
 
 Frontend runs on: `http://localhost:5173`
 
-## 📚 API Endpoints
+##  API Endpoints
 
 ### Users
 - `POST /api/v1/users/register` — Create new user
@@ -99,7 +99,7 @@ Frontend runs on: `http://localhost:5173`
 - `PUT /api/v1/notes/:id` — Update note
 - `DELETE /api/v1/notes/:id` — Delete note
 
-## 🔐 Security Features
+##  Security Features
 
 - **Password Validation** — 8+ chars, uppercase, lowercase, number, special char
 - **Email Validation** — RFC 5322 compliant email format checking
@@ -110,7 +110,7 @@ Frontend runs on: `http://localhost:5173`
 - **Password Hashing** — bcrypt with 10 salt rounds
 - **Environment Validation** — Fails immediately if required config missing
 
-## 📖 Database Schema
+## Database Schema
 
 ### Users Table
 ```sql
@@ -136,7 +136,7 @@ CREATE TABLE notes (
 );
 ```
 
-## 🎓 What I Learned
+##  What I Learned
 
 - **Full-stack architecture** — Building cohesive frontend and backend with proper separation of concerns
 - **JWT authentication** — Implementing token-based auth with refresh token rotation
@@ -146,7 +146,7 @@ CREATE TABLE notes (
 - **Error handling** — Meaningful error messages and graceful failure recovery
 - **Production mindset** — Environment configuration, graceful shutdown, connection pooling
 
-## 🚀 Future Improvements
+##  Future Improvements
 
 - Add password reset/forgot password flow
 - Implement 2FA (Two-Factor Authentication)
@@ -159,18 +159,15 @@ CREATE TABLE notes (
 - API documentation (Swagger/OpenAPI)
 - Deployment guides
 
-## 📝 Environment Variables
+##  Environment Variables
 
 See `.env.example` for all required variables and their descriptions.
 
-## ⚖️ License
+##  License
 
 MIT
 
-## 👤 Author
+##  Author
 
 Richard
 
----
-
-**Ready to Deploy?** This app is production-ready. See `.env.example` for configuration requirements.
