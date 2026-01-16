@@ -40,5 +40,5 @@ app.use("/api/v1/users/register", loginLimiter); // apply strict limiter to regi
 app.use("/api/v1/notes", notesRoutes);
 app.use("/api/v1/users", usersRoutes);
 
-const PORT = Number(process.env.PORT);
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Backend running at http://localhost:${PORT}`));
