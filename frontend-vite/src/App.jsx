@@ -11,8 +11,13 @@ import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 // Allows cookies to be sent with every request automatically
 axios.defaults.withCredentials = true;
 
-const API_BASE = "http://localhost:5000/api/v1/notes";
-const USER_BASE = "http://localhost:5000/api/v1/users";
+const API_URL = import.meta.env.VITE_API_URL; // e.g. https://notes-api-tg5u.onrender.com
+if (!API_URL) {
+  throw new Error("VITE_API_URL is not set. Add it in Vercel Environment Variables and redeploy.");
+}
+const API_BASE = `${API_URL}/api/v1/notes`;
+const USER_BASE = `${API_URL}/api/v1/users`;
+
 
 export default function App() {
   const navigate = useNavigate();

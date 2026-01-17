@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./auth.css"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL;
 const USER_BASE = `${API_URL}/api/v1/users`;
 
 export default function Register({ email, setEmail, password, setPassword, register, fetchNotes, setIsLoggedIn }) {
