@@ -34,15 +34,15 @@ router.get("/", auth, async (req, res) => {
     const searchQuery = req.query.q ? `%${req.query.q.trim().substring(0, 500)}%` : "%";
 
     const result = await db.query(
-      `SELECT id, title, contents, created_at, updated_at FROM notes WHERE user_id=$1 
-      AND title ILIKE $2 AND (title ILIKE $3 OR contents ILIKE $3)
+      `SELECT id, title, content As contents, created_at, updated_at FROM notes WHERE user_id=$1 
+      AND title ILIKE $2 AND (title ILIKE $3 OR content ILIKE $3)
        ORDER BY created_at DESC LIMIT $4 OFFSET $5`,
        [userId, titleFilter, searchQuery, limit, offset]
     );
 
     // Get total number of matching notes
     const countResult = await db.query(`SELECT COUNT(*) FROM notes WHERE user_id=$1 
-      AND title ILIKE $2 AND (title ILIKE $3 OR contents ILIKE $3)`,
+      AND title ILIKE $2 AND (title ILIKE $3 OR content ILIKE $3)`,
       [userId, titleFilter, searchQuery]
     );
 
@@ -70,8 +70,8 @@ router.post("/", auth, async (req, res) => {
   }
 
   try {
-    const result = await db.query(`INSERT INTO notes (title, contents, user_id) 
-       VALUES ($1, $2, $3) RETURNING id, title, contents, created_at, updated_at`,
+    const result = await db.query(`INSERT INTO notes (title, content, user_id) 
+       VALUES ($1, $2, $3) RETURNING id, title, content As contents, created_at, updated_at`,
       [title.trim(), (contents || "").trim(), req.user.id]
     );
 
@@ -97,10 +97,9 @@ router.put("/:id", auth, async (req, res) => {
 
   try {
     const result = await db.query(
-      `UPDATE notes 
-       SET title=$1, contents=$2, updated_at=NOW() 
+      `UPDATE notes SET title=$1, content=$2, updated_at=NOW() 
        WHERE id=$3 AND user_id=$4 
-       RETURNING id, title, contents, created_at, updated_at`,
+       RETURNING id, title, content As contents, created_at, updated_at`,
       [title.trim(), (contents || "").trim(), noteId, req.user.id]
     );
 
