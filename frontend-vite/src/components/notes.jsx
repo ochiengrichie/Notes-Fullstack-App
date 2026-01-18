@@ -13,7 +13,9 @@ export default function Notes({
   editingNoteId,
   fetchNotes,
   currentPage,
-  hasNextPage
+  hasNextPage,
+  error,
+  setError
 }) {
   const [showInput, setShowInput] = useState(false);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -40,6 +42,13 @@ export default function Notes({
       <div className="notes-search">
         <button onClick={() => setShowSearch(prev => !prev)}>🔍</button>
       </div>
+
+      {error && (
+        <div className="error-message">
+          <p><strong>Error:</strong> {error}</p>
+          <button onClick={() => setError("")} className="error-dismiss">Dismiss</button>
+        </div>
+      )}
 
         {showSearch && (
         <div className="notes-search notes-search-active">

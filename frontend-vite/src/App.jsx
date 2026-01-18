@@ -27,6 +27,7 @@ export default function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   // Notes state
   const [notes, setNotes] = useState([]);
@@ -85,13 +86,14 @@ export default function App() {
   const login = async () => {
     if (!email.trim() || !password) return;
     try {
+      setError("");
       await axios.post(`${USER_BASE}/login`, { email, password });
       await fetchNotes();
       navigate("/");
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
       if (err.response?.status === 401) await refreshJWT();
-      else alert(err.response?.data?.error || "Login failed");
+      else setError(err.response?.data?.error || "Login failed");
     }
   };
 
@@ -99,6 +101,7 @@ export default function App() {
   const register = async () => {
     if (!email.trim() || !password) return;
     try {
+      setError("");
       await axios.post(`${USER_BASE}/register`, { email, password });
       await axios.post(`${USER_BASE}/login`, { email, password });
       await fetchNotes();
@@ -106,7 +109,7 @@ export default function App() {
     } catch (err) {
       console.error("Registration failed:", err.response?.data || err.message);
       if (err.response?.status === 401) await refreshJWT();
-      else alert(err.response?.data?.error || "Registration failed");
+      else setError(err.response?.data?.error || "Registration failed");
     }
   };
 
@@ -124,6 +127,7 @@ export default function App() {
   const submitNote = async () => {
     if (!title.trim() || !content.trim()) return;
     try {
+      setError("");
       if (editingNoteId) {
         // UPDATE EXISTING NOTE
         const res = await axios.put(`${API_BASE}/${editingNoteId}`, {
@@ -146,7 +150,7 @@ export default function App() {
       setContent("");
     } catch (err) {
       console.error(err);
-      alert("Failed to save note");
+      setError(err.response?.data?.error || "Failed to save note");
     }
   };
 
@@ -164,7 +168,7 @@ export default function App() {
       setNotes(prev => prev.filter(n => n.id !== id));
     } catch (err) {
       console.error("Failed to delete note:", err.response?.data || err.message);
-      alert(err.response?.data?.error || "Failed to delete note");
+      setError(err.response?.data?.error || "Failed to delete note");
     }
   };
 
@@ -184,6 +188,8 @@ export default function App() {
                 login={login}
                 setIsLoggedIn={setIsLoggedIn}
                 fetchNotes={fetchNotes}
+                error={error}
+                setError={setError}
               />
             }
           />
@@ -198,6 +204,8 @@ export default function App() {
                 register={register}
                 setIsLoggedIn={setIsLoggedIn}
                 fetchNotes={fetchNotes}
+                error={error}
+                setError={setError}
               />
             }
           />
@@ -218,7 +226,9 @@ export default function App() {
                   logout={logout}
                   fetchNotes={fetchNotes}
                   currentPage={currentPage} 
-                  hasNextPage={hasNextPage}  
+                  hasNextPage={hasNextPage}
+                  error={error}
+                  setError={setError}  
                 />
               </ProtectedRoutes>
             }
