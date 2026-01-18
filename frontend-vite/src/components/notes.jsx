@@ -109,8 +109,8 @@ export default function Notes({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Contents"
-            rows={5}
-            cols={10}
+            rows={8}
+            style={{ height: "180px"}}
           /><br/>
           <button onClick={handleSubmit}>
             {editingNoteId ? "Update" : "Add"}
