@@ -134,8 +134,9 @@ export default function App() {
           title: title.trim(),
           contents: content.trim()
         });
+        const updatedNote = res.data?.data;
         setNotes(prev =>
-          prev.map(note => note.id === editingNoteId ? res.data : note)
+          prev.map(note => note.id === editingNoteId ? updatedNote : note)
         );
         setEditingNoteId(null); // exit edit mode
       } else {
@@ -144,7 +145,8 @@ export default function App() {
           title: title.trim(),
           contents: content.trim()
         });
-        setNotes(prev => [res.data, ...prev]); // add new note at top
+        const newNote = res.data?.data;
+        setNotes(prev => [newNote, ...prev]); // add new note at top
       }
       setTitle("");
       setContent("");
@@ -239,5 +241,4 @@ export default function App() {
     </div>
   );
 }
-
 
