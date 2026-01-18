@@ -74,7 +74,7 @@ export default function Notes({
               </div>
 
               <div className="note-actions">
-                <button onClick={(e) => { e.stopPropagation(); startEdit(note); }}>
+                <button onClick={(e) => { e.stopPropagation(); startEdit(note); setShowInput(true); }}>
                   Edit
                 </button>
                 <button onClick={(e) => { e.stopPropagation(); deleteNote(note.id); }}>
