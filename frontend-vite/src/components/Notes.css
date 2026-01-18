@@ -17,8 +17,15 @@
   gap: 10px;
 }
 
+.notes-input input {
+  width: 300px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .notes-input textarea {
   height: 180px;
+  width: 300px;
   resize: both;
 }
 
