@@ -104,16 +104,19 @@ export default function Notes({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Add New note"
-          /><br/>
+          />
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Contents"
             rows={8}
             style={{ height: "180px"}}
-          /><br/>
+          />
           <button onClick={handleSubmit}>
             {editingNoteId ? "Update" : "Add"}
+          </button>
+          <button onClick={() => setShowInput(false)}>
+            Cancel
           </button>
         </div>
       )}
