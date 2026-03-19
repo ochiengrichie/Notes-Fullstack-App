@@ -5,11 +5,7 @@ import env from "dotenv";
 env.config();
 
 const requiredEnvVars = [
-  "PGUSER",
-  "PGHOST",
-  "PGDATABASE",
-  "PGPASSWORD",
-  "PGPORT",
+  "DATABASE_URL",
   "PORT",
   "JWT_SECRET",
   "REFRESH_TOKEN_SECRET"
@@ -22,16 +18,16 @@ if (missingVars.length > 0) {
   process.exit(1);
 }
 
+console.log("All environment variables validated");
+
 export const db = new Pool({
-  user: process.env.PGUSER || process.env.PG_USER,
-  host: process.env.PGHOST || process.env.PG_HOST,
-  database: process.env.PGDATABASE || process.env.PG_DATABASE,
-  password: process.env.PGPASSWORD || process.env.PG_PASSWORD,
-  port: Number(process.env.PGPORT || process.env.PG_PORT),
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
-  ssl: { rejectUnauthorized: false },
 });
 
 db.on("error", (err) => {
