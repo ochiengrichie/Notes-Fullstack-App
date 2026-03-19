@@ -4,50 +4,42 @@ import env from "dotenv";
 
 env.config();
 
-// List of required environment variables
 const requiredEnvVars = [
-  "PG_USER",
-  "PG_HOST",
-  "PG_DATABASE",
-  "PG_PASSWORD",
-  "PG_PORT",
+  "PGUSER",
+  "PGHOST",
+  "PGDATABASE",
+  "PGPASSWORD",
+  "PGPORT",
   "PORT",
   "JWT_SECRET",
   "REFRESH_TOKEN_SECRET"
 ];
 
-// Check each one exists
 const missingVars = requiredEnvVars.filter(v => !process.env[v]);
 
 if (missingVars.length > 0) {
-  console.error(`❌ Missing required environment variables: ${missingVars.join(", ")}`);
-  console.error("Make sure your .env file has all required fields");
-  process.exit(1); // Stop the server
+  console.error(`Missing required environment variables: ${missingVars.join(", ")}`);
+  process.exit(1);
 }
 
-console.log("✅ All environment variables validated");
-
-// Connection pool with production-ready limits
 export const db = new Pool({
-  user: process.env.PG_USER,
-  host: process.env.PG_HOST,
-  database: process.env.PG_DATABASE,
-  password: process.env.PG_PASSWORD,
-  port: Number(process.env.PG_PORT),
-  max: 20,                    // Maximum connections in pool
-  idleTimeoutMillis: 30000,  // Close idle connections after 30s
-  connectionTimeoutMillis: 5000, // Fail if can't get connection in 5s
+  user: process.env.PGUSER || process.env.PG_USER,
+  host: process.env.PGHOST || process.env.PG_HOST,
+  database: process.env.PGDATABASE || process.env.PG_DATABASE,
+  password: process.env.PGPASSWORD || process.env.PG_PASSWORD,
+  port: Number(process.env.PGPORT || process.env.PG_PORT),
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
   ssl: { rejectUnauthorized: false },
 });
 
-// Handle pool errors
-db.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
+db.on("error", (err) => {
+  console.error("Unexpected error on idle client", err);
 });
 
-// Graceful shutdown
-process.on('SIGINT', () => {
-  db.end();
-  console.log('Connection pool closed');
+process.on("SIGINT", async () => {
+  await db.end();
+  console.log("Connection pool closed");
   process.exit(0);
 });
