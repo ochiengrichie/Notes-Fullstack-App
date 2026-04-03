@@ -21,6 +21,7 @@ const loginLimiter = rateLimit({
 });
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(cookieParser())
 
 // Get frontend URL from environment, fallback to localhost for development
