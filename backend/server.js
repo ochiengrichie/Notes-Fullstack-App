@@ -20,6 +20,8 @@ const loginLimiter = rateLimit({
   message: "Too many login attempts, try again later"
 });
 
+env.config();
+
 const app = express();
 app.set("trust proxy", 1);
 app.use(cookieParser())
@@ -33,7 +35,7 @@ app.use(cors({
 }));
 app.use(express.json({ limit: "10mb" })); // Max 10MB JSON body
 app.use(express.urlencoded({ limit: "10mb" })); // Max 10MB form data
-env.config();
+
 
 app.use(limiter);
 app.use("/api/v1/users/login", loginLimiter); // apply strict limiter to login route
