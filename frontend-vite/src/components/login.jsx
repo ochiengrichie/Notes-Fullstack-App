@@ -7,7 +7,7 @@ import "./auth.css"
 const API_URL = import.meta.env.VITE_API_URL;
 const USER_BASE = `${API_URL}/api/v1/users`;
 
-export default function Login({ email, setEmail, password, setPassword, login,setIsLoggedIn, fetchNotes, error, setError }) {
+export default function Login({ email, setEmail, password, setPassword, login,setIsLoggedIn, fetchNotes, error, setError, setCurrentUserEmail }) {
     const navigate = useNavigate();
     return (
         <div className="page-center">
@@ -36,6 +36,8 @@ export default function Login({ email, setEmail, password, setPassword, login,se
                         try {
                         setError("");
                         await axios.post(`${USER_BASE}/google`, { credential }, { withCredentials: true});
+                        setCurrentUserEmail(email || "Google user");
+                        window.localStorage.setItem("notes-user-email", email || "Google user");
                         await fetchNotes(); // fetch notes after login
                         setIsLoggedIn(true);
                         navigate("/");

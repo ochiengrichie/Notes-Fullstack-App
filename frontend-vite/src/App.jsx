@@ -21,11 +21,12 @@ const USER_BASE = `${API_URL}/api/v1/users`;
 
 export default function App() {
   const navigate = useNavigate();
+  const storedEmail = typeof window !== "undefined" ? window.localStorage.getItem("notes-user-email") || "" : "";
 
   // Authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(storedEmail);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -81,6 +82,10 @@ export default function App() {
     fetchNotes();
   },[]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (email) window.localStorage.setItem("notes-user-email", email);
+  }, [email]);
 
   // Login
   const login = async () => {
@@ -88,6 +93,7 @@ export default function App() {
     try {
       setError("");
       await axios.post(`${USER_BASE}/login`, { email, password });
+      window.localStorage.setItem("notes-user-email", email);
       await fetchNotes();
       navigate("/");
     } catch (err) {
@@ -104,6 +110,7 @@ export default function App() {
       setError("");
       await axios.post(`${USER_BASE}/register`, { email, password });
       await axios.post(`${USER_BASE}/login`, { email, password });
+      window.localStorage.setItem("notes-user-email", email);
       await fetchNotes();
       navigate("/");
     } catch (err) {
@@ -120,6 +127,7 @@ export default function App() {
     setNotes([]);
     setEmail("");
     setPassword("");
+    window.localStorage.removeItem("notes-user-email");
     navigate("/login");
   };
 
@@ -176,40 +184,42 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      <Header isLoggedIn={isLoggedIn} logout={logout}/>
+      {!isLoggedIn ? <Header isLoggedIn={isLoggedIn} logout={logout}/> : null}
       <main className="app-body">
         <Routes>
           <Route
             path="/login"
             element={
-              <Login
-                email={email}
-                setEmail={setEmail}
+                <Login
+                  email={email}
+                  setEmail={setEmail}
                 password={password}
                 setPassword={setPassword}
                 login={login}
                 setIsLoggedIn={setIsLoggedIn}
-                fetchNotes={fetchNotes}
-                error={error}
-                setError={setError}
-              />
-            }
+                  fetchNotes={fetchNotes}
+                  error={error}
+                  setError={setError}
+                  setCurrentUserEmail={setEmail}
+                />
+              }
           />
           <Route
             path="/register"
             element={
-              <Register
-                email={email}
-                setEmail={setEmail}
+                <Register
+                  email={email}
+                  setEmail={setEmail}
                 password={password}
                 setPassword={setPassword}
                 register={register}
                 setIsLoggedIn={setIsLoggedIn}
-                fetchNotes={fetchNotes}
-                error={error}
-                setError={setError}
-              />
-            }
+                  fetchNotes={fetchNotes}
+                  error={error}
+                  setError={setError}
+                  setCurrentUserEmail={setEmail}
+                />
+              }
           />
           <Route
             path="/"
@@ -230,7 +240,8 @@ export default function App() {
                   currentPage={currentPage} 
                   hasNextPage={hasNextPage}
                   error={error}
-                  setError={setError}  
+                  setError={setError}
+                  userEmail={email}
                 />
               </ProtectedRoutes>
             }
@@ -241,4 +252,3 @@ export default function App() {
     </div>
   );
 }
-
