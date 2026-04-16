@@ -11,27 +11,56 @@ import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 // Allows cookies to be sent with every request automatically
 axios.defaults.withCredentials = true;
 
+const FRONTEND_ONLY_PREVIEW = true;
 const API_URL = import.meta.env.VITE_API_URL; // e.g. https://notes-api-tg5u.onrender.com
-if (!API_URL) {
+if (!API_URL && !FRONTEND_ONLY_PREVIEW) {
   throw new Error("VITE_API_URL is not set. Add it in Vercel Environment Variables and redeploy.");
 }
-const API_BASE = `${API_URL}/api/v1/notes`;
-const USER_BASE = `${API_URL}/api/v1/users`;
+const API_BASE = API_URL ? `${API_URL}/api/v1/notes` : "";
+const USER_BASE = API_URL ? `${API_URL}/api/v1/users` : "";
+
+const MOCK_NOTES = [
+  {
+    id: 1,
+    title: "Second Note",
+    contents: "This is the second note.",
+    created_at: "2024-04-24T10:00:00.000Z",
+    updated_at: "2024-04-24T10:00:00.000Z",
+  },
+  {
+    id: 2,
+    title: "My First Note",
+    contents: "This is my first note.",
+    created_at: "2024-04-24T10:00:00.000Z",
+    updated_at: "2024-04-24T10:00:00.000Z",
+  },
+];
+
+function filterMockNotes(q = "") {
+  const search = q.trim().toLowerCase();
+  if (!search) return MOCK_NOTES;
+
+  return MOCK_NOTES.filter((note) =>
+    note.title.toLowerCase().includes(search) ||
+    note.contents.toLowerCase().includes(search)
+  );
+}
 
 
 export default function App() {
   const navigate = useNavigate();
   const storedEmail = typeof window !== "undefined" ? window.localStorage.getItem("notes-user-email") || "" : "";
+  const previewEmail = "john.doe@gmail.com";
 
   // Authentication state
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-  const [email, setEmail] = useState(storedEmail);
+  const [isLoggedIn, setIsLoggedIn] = useState(FRONTEND_ONLY_PREVIEW);
+  const [checkingAuth, setCheckingAuth] = useState(!FRONTEND_ONLY_PREVIEW);
+  const [email, setEmail] = useState(FRONTEND_ONLY_PREVIEW ? previewEmail : storedEmail);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   // Notes state
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(FRONTEND_ONLY_PREVIEW ? MOCK_NOTES : []);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [editingNoteId, setEditingNoteId] = useState(null);
@@ -39,10 +68,19 @@ export default function App() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(20);
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(FRONTEND_ONLY_PREVIEW);
 
   // Fetch notes function
   const fetchNotes = async (page = 1, q = "") => {
+    if (FRONTEND_ONLY_PREVIEW) {
+      setNotes(filterMockNotes(q));
+      setCurrentPage(1);
+      setHasNextPage(false);
+      setIsLoggedIn(true);
+      setCheckingAuth(false);
+      return;
+    }
+
     try {
       const qParam = q ? `&q=${encodeURIComponent(q)}` : "";
       const res = await axios.get(`${API_BASE}?page=${page}&limit=${limit}${qParam}`);
@@ -68,6 +106,12 @@ export default function App() {
 
   // Refresh JWT silently
   const refreshJWT = async () => {
+    if (FRONTEND_ONLY_PREVIEW) {
+      setIsLoggedIn(true);
+      setCheckingAuth(false);
+      return;
+    }
+
     try {
       await axios.post(`${USER_BASE}/refresh`);
       await fetchNotes();
@@ -79,6 +123,15 @@ export default function App() {
 
   // On app load
   useEffect(() => {
+    if (FRONTEND_ONLY_PREVIEW) {
+      setNotes(MOCK_NOTES);
+      setEmail(previewEmail);
+      setIsLoggedIn(true);
+      setCheckingAuth(false);
+      setHasNextPage(true);
+      return;
+    }
+
     fetchNotes();
   },[]);
 
@@ -89,6 +142,13 @@ export default function App() {
 
   // Login
   const login = async () => {
+    if (FRONTEND_ONLY_PREVIEW) {
+      setIsLoggedIn(true);
+      setCheckingAuth(false);
+      navigate("/");
+      return;
+    }
+
     if (!email.trim() || !password) return;
     try {
       setError("");
@@ -105,6 +165,13 @@ export default function App() {
 
   // Register
   const register = async () => {
+    if (FRONTEND_ONLY_PREVIEW) {
+      setIsLoggedIn(true);
+      setCheckingAuth(false);
+      navigate("/");
+      return;
+    }
+
     if (!email.trim() || !password) return;
     try {
       setError("");
@@ -122,6 +189,10 @@ export default function App() {
 
   // Logout
   const logout = async () => {
+    if (FRONTEND_ONLY_PREVIEW) {
+      return;
+    }
+
     await axios.post(`${USER_BASE}/logout`);
     setIsLoggedIn(false);
     setNotes([]);
@@ -134,6 +205,38 @@ export default function App() {
   // Add and Update Note
   const submitNote = async () => {
     if (!title.trim() || !content.trim()) return;
+
+    if (FRONTEND_ONLY_PREVIEW) {
+      if (editingNoteId) {
+        setNotes((prev) =>
+          prev.map((note) =>
+            note.id === editingNoteId
+              ? {
+                  ...note,
+                  title: title.trim(),
+                  contents: content.trim(),
+                  updated_at: new Date().toISOString(),
+                }
+              : note
+          )
+        );
+        setEditingNoteId(null);
+      } else {
+        const newNote = {
+          id: Date.now(),
+          title: title.trim(),
+          contents: content.trim(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        setNotes((prev) => [newNote, ...prev]);
+      }
+
+      setTitle("");
+      setContent("");
+      return;
+    }
+
     try {
       setError("");
       if (editingNoteId) {
@@ -173,6 +276,11 @@ export default function App() {
 
   // Delete note
   const deleteNote = async (id) => {
+    if (FRONTEND_ONLY_PREVIEW) {
+      setNotes((prev) => prev.filter((n) => n.id !== id));
+      return;
+    }
+
     try {
       await axios.delete(`${API_BASE}/${id}`);
       setNotes(prev => prev.filter(n => n.id !== id));
