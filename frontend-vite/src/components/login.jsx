@@ -12,47 +12,61 @@ export default function Login({ email, setEmail, password, setPassword, login,se
     return (
         <div className="page-center">
             <div className="login-component">
-                <h2>Login</h2>
+                <div className="auth-copy">
+                    <p className="auth-eyebrow">Welcome back</p>
+                    <h2>Login</h2>
+                    <p className="auth-subtitle">Sign in to manage your notes and keep them in sync.</p>
+                </div>
                 {error && <p className="error-message">{error}</p>}
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    /><br/><br/>
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    /><br/><br/>
-                <button onClick={login}>login</button>
-                <br/>
-                <br/>
+                <div className="auth-form">
+                    <label className="auth-field">
+                        <span>Email</span>
+                        <input
+                            type="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </label>
+                    <label className="auth-field">
+                        <span>Password</span>
+                        <input
+                            type="password"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </label>
+                    <button className="auth-primary" onClick={login}>Login</button>
+                </div>
 
-                <GoogleLogin  
-                    onSuccess={async (credentialResponse) => {
-                        const credential = credentialResponse.credential;
-                        try {
-                        setError("");
-                        await axios.post(`${USER_BASE}/google`, { credential }, { withCredentials: true});
-                        setCurrentUserEmail(email || "Google user");
-                        window.localStorage.setItem("notes-user-email", email || "Google user");
-                        await fetchNotes(); // fetch notes after login
-                        setIsLoggedIn(true);
-                        navigate("/");
-                        } catch (err) {
-                        console.error("Google login failed:", err.response?.data || err.message);
-                        setError(err.response?.data?.error || "Google login failed");
-                        }
-                    }}
-                        
-                    onError={() => {
-                        console.log('Login Failed');
-                        setError("Google login failed");
-                    }}
-                />
+                <div className="auth-divider">
+                    <span>or continue with</span>
+                </div>
 
+                <div className="auth-google">
+                    <GoogleLogin  
+                        onSuccess={async (credentialResponse) => {
+                            const credential = credentialResponse.credential;
+                            try {
+                            setError("");
+                            await axios.post(`${USER_BASE}/google`, { credential }, { withCredentials: true});
+                            setCurrentUserEmail(email || "Google user");
+                            window.localStorage.setItem("notes-user-email", email || "Google user");
+                            await fetchNotes();
+                            setIsLoggedIn(true);
+                            navigate("/");
+                            } catch (err) {
+                            console.error("Google login failed:", err.response?.data || err.message);
+                            setError(err.response?.data?.error || "Google login failed");
+                            }
+                        }}
+                        onError={() => {
+                            console.log('Login Failed');
+                            setError("Google login failed");
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );
