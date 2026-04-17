@@ -27,16 +27,6 @@ function EditIcon() {
   );
 }
 
-function StackIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 3L4 8L12 13L20 8L12 3Z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M6.5 11.2L12 15L17.5 11.2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M6.5 15.2L12 19L17.5 15.2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 function NoteIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -148,38 +138,6 @@ export default function Notes({
 
   return (
     <div className="dashboard-shell">
-      <aside className="dashboard-rail">
-        <div className="rail-brand">
-          <StackIcon />
-        </div>
-        <div className="rail-actions">
-          <button
-            type="button"
-            className={`rail-icon-button ${activeSection === "all" ? "active" : ""}`}
-            onClick={() => handleSectionChange("all")}
-            aria-label="All notes"
-          >
-            <NoteIcon />
-          </button>
-          <button
-            type="button"
-            className={`rail-icon-button ${activeSection === "archive" ? "active" : ""}`}
-            onClick={() => handleSectionChange("archive")}
-            aria-label="Archive"
-          >
-            <ArchiveIcon />
-          </button>
-          <button
-            type="button"
-            className={`rail-icon-button ${activeSection === "trash" ? "active" : ""}`}
-            onClick={() => handleSectionChange("trash")}
-            aria-label="Trash"
-          >
-            <TrashIcon />
-          </button>
-        </div>
-      </aside>
-
       <div className="dashboard-frame">
         <header className="dashboard-topbar">
           <div className="dashboard-title-wrap">
@@ -216,24 +174,30 @@ export default function Notes({
                 className={`sidebar-item ${activeSection === "all" ? "active" : ""}`}
                 onClick={() => handleSectionChange("all")}
               >
-                <span className="sidebar-dot" />
-                <span>All Notes</span>
+                <span className="sidebar-icon">
+                  <NoteIcon />
+                </span>
+                <span className="sidebar-label">All Notes</span>
               </button>
               <button
                 type="button"
                 className={`sidebar-item ${activeSection === "archive" ? "active" : ""}`}
                 onClick={() => handleSectionChange("archive")}
               >
-                <span className="sidebar-dot" />
-                <span>Archive</span>
+                <span className="sidebar-icon">
+                  <ArchiveIcon />
+                </span>
+                <span className="sidebar-label">Archive</span>
               </button>
               <button
                 type="button"
                 className={`sidebar-item ${activeSection === "trash" ? "active" : ""}`}
                 onClick={() => handleSectionChange("trash")}
               >
-                <span className="sidebar-dot" />
-                <span>Trash</span>
+                <span className="sidebar-icon">
+                  <TrashIcon />
+                </span>
+                <span className="sidebar-label">Trash</span>
               </button>
             </div>
 
